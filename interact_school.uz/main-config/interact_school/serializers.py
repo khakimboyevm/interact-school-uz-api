@@ -6,10 +6,17 @@ class LanguageSerializer(serializers.ModelSerializer):
         model = Langulages
         fields = ['id', 'name', 'slug', 'image', 'category_type']
 
+class ContentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Content
+        fields = ['id', 'name', 'slug', 'title_type', 'content_text', ]
+
+
 class TitlesSerializer(serializers.ModelSerializer):
+    content = ContentSerializer(many=True, read_only=True,  source='content_set')
     class Meta:
         model = Titles
-        fields = ['id', 'name', 'slug', 'maintitle_type']
+        fields = ['id', 'name', 'slug', 'maintitle_type', 'content']
 
 class MainTitlesSerializer(serializers.ModelSerializer):
     titles = TitlesSerializer(many=True, read_only=True,  source='titles_set')
@@ -17,10 +24,6 @@ class MainTitlesSerializer(serializers.ModelSerializer):
         model = MainTitles
         fields = ['id', 'name', 'slug', 'language_type', "titles"]
 
-class ContentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Content
-        fields = ['id', 'name', 'slug', 'title_type', 'content_text', ]
 
 
 class BlogSerializer(serializers.ModelSerializer):
